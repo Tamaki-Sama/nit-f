@@ -1,0 +1,193 @@
+.workout {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  background-color: var(--card-background);
+  border-bottom: 1.2px solid var(--border-color); /* جدا کننده خطی */
+  margin-bottom: 0;
+}
+
+.workout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.workout-name {
+  font-size: 1.1em;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.workout-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.workout-editbutton {
+  all: unset;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 400;
+  color: var(--primary-color);
+  padding: 5px 8px;
+  border-radius: 4px;
+}
+
+.workout-editbutton:hover {
+  color: var(--primary-dark);
+}
+
+.add-set-form {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* کاهش gap برای فضای موبایل */
+    padding: 10px 0; /* padding ثابت برای حفظ ارتفاع */
+    
+    /* 💡 مهم: تضمین ارتفاع ثابت برای جلوگیری از Layout Shift */
+    min-height: 50px; 
+}
+
+.add-set-form input[type="number"] {
+    flex-grow: 1;
+    padding: 8px;
+    border: 0.8px solid var(--border-color);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1rem;
+    width: 0;
+}
+
+.save-set-btn {
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 8px 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+/* --- ۶. استایل‌های Set List (ورک‌آوت‌های ثبت شده) --- */
+
+.workout-setstable {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.set-item {
+  display: flex; /* استفاده از Flexbox */
+  align-items: center;
+  justify-content: space-between; /* پخش شدن عناصر در طول ردیف */
+  gap: 8px; /* فاصله بین آیتم‌های ست */
+  padding: 8px 0; /* افزایش Padding برای ارتفاع لمس بهتر */
+  border-bottom: 1px dashed var(--border-color);
+  min-height: 48px; /* تضمین حداقل ارتفاع برای لمس آسان (Tap Target) */
+}
+
+.set-item:last-child {
+  border-bottom: none;
+}
+
+.set-index {
+  color: var(--text-muted);
+  font-size: 0.8em;
+    flex-shrink: 0; /* جلوگیری از کوچک شدن شماره */
+    flex-basis: 25px; 
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.set-weight, .set-reps {
+  font-size: 1em;
+  font-weight: 500;
+    flex-grow: 1;
+    text-align: center;
+    min-width: 60px;
+    flex-basis: 0;
+    flex-shrink: 1;
+}
+
+.set-weight input, .set-reps input {
+  width: fit-content;
+}
+
+.set-unit { /* برای "kgs" و "reps" */
+    color: var(--text-muted);
+    font-size: 0.85em;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+/* --- ۷. استایل‌های حالت ویرایش ست (Add New Set) --- */
+.set-add-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.set-add-form input[type="number"] {
+    width: 60px;
+    padding: 8px;
+    font-size: 0.9em;
+}
+
+.set-add-form button[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9em;
+}
+.set-item > input[type="checkbox"],
+.set-item .delete-btn {
+    flex-shrink: 0;
+    flex-basis: 38px;
+    width: 38px; 
+    height: 38px;
+    margin: 0;
+    padding: 0;
+}
+.delete-btn svg {
+    width: 100%;
+    height: 100%;
+}
+/* --- استایل‌های حالت ویرایش درون خطی (در Set-component) --- */
+
+.inline-edit-form {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    display: flex; /* استفاده از Flexbox برای مدیریت Input و دکمه‌ها */
+    align-items: center;
+    gap: 5px; /* فاصله کوچک بین عناصر */
+    flex-grow: 1; /* اجازه می‌دهد فرم، فضای کانتینر وزن/تکرار را پر کند */
+    max-width: 100%;
+}
+.inline-edit-form input {
+    /* 💡 مهم‌ترین اصلاح: عرض Input باید انعطاف‌پذیر باشد */
+    width: 50px; /* شروع کوچک */
+    flex-grow: 1; /* اجازه رشد را می‌دهیم */
+    max-width: 80px; /* حداکثر عرض منطقی */
+    padding: 5px;
+    font-size: 1em;
+    text-align: center;
+    margin: 0;
+}
+.inline-edit-form .confirm-btn {
+    margin: 0;
+    flex-shrink: 1;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+}
