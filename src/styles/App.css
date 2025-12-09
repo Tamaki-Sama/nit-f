@@ -1,0 +1,361 @@
+:root {
+  --primary-color: #1890FF;
+  --secondary-color: #52C41A;
+  --primary-dark: #125ea5;
+  --background-light: #F0F2F5;
+  --background-dark: #2b2b2c;
+  --card-background: #FFFFFF;
+  --text-light: #262626;
+  --text-muted: #3f3f3f;
+  --border-color: #384352;
+  --border-radius: 4px;
+}
+* {font-weight: bolder;}
+:root, body.light-theme {
+  /* رنگ‌های ثابت (مثل Primary) */
+  --primary-color: #1890FF;
+  --primary-dark: #125ea5;
+
+  /* رنگ‌های Light Mode */
+  --app-background: #F0F2F5; /* پس‌زمینه اصلی */
+  --card-background: #FFFFFF; /* پس‌زمینه Card و Modal */
+  --text-primary: #262626; /* متن اصلی تیره */
+  --text-secondary: #6a6a6a; /* متن ثانویه */
+  --border-color-custom: #D9D9D9; /* خطوط جداکننده */
+}
+
+/* تعریف رنگ‌های Dark Theme */
+body.dark-theme {
+  --app-background: #2b2b2c; /* پس‌زمینه اصلی تیره */
+  --card-background: #1f1f1f; /* پس‌زمینه Card تیره‌تر */
+  --text-primary: #f0f0f0; /* متن اصلی روشن */
+  --text-secondary: #a3a3a3; /* متن ثانویه روشن */
+  --border-color-custom: #384352; /* خطوط جداکننده تیره */
+  
+  /* می‌توانید Primary Color را نیز برای کنتراست بهتر تغییر دهید */
+  --primary-color: #40A9FF;
+}
+body {
+  font-family: 'Roboto', 'Vazirmatn', sans-serif;
+  background-color: var(--app-background);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 600px;
+  padding: 0;
+}
+
+/* --- App Container --- */
+.app-container {
+  background: var(--app-background);
+  padding: 0;
+  box-shadow: none;
+  min-height: 100vh;
+}
+
+button {
+    border-style:hidden;
+    border-radius: 2px;
+    padding: 3px;
+}
+button:hover {
+    background-color: #ccc;
+}
+
+/* --- Form Styles --- */
+.log-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: var(--card-background);
+  border-radius: 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+input:focus, select:focus {
+  border-color: var(--primary-color);
+  outline: 2px solid var(--primary-color);
+}
+
+.submit-btn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+.submit-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.workout-picker-btn-small {
+    width: 50%;
+}
+
+svg {
+  width: max-content;
+  height: max-content;
+}
+
+/* --- Icon Styles --- */
+.icon, svg {
+    width: 18px; 
+    height: 18px;
+    vertical-align: middle; 
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.check-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* --- Timer Styles --- */
+.timer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* --- Workout Picker Button --- */
+.workout-picker-btn {
+    width: 100%;
+}
+
+/* --- Ant Design Button Input Style --- */
+.ant-style-button-input {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    height: 40px; 
+    min-width: 100px;
+    width: 100%;
+    padding: 0 15px;
+    font-size: 16px; 
+    background-color: #fff;
+    border: 1px solid #000000;
+    border-radius: 5px; 
+    color: rgba(0, 0, 0, 0.88); 
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    text-align: center; 
+}
+
+.ant-style-button-input:hover {
+    border-color: var(--primary-color); 
+    color: var(--primary-color);
+}
+
+button {
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.ant-checkbox-input {
+    border: solid var(--primary-color);
+}
+
+/* --- Add Button --- */
+.add-btn {
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.add-btn:hover {
+    background-color: #0056b3;
+}
+
+.add-btn:active {
+    transform: scale(0.98);
+}
+
+/* --- History List Styles --- */
+.history-table-container {
+    padding: 10px;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.history-workout-item {
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.history-date-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #3a3a3a;
+}
+
+.history-date-header span{
+    color: #e0e0e0;
+}
+
+.history-date-header small {
+    font-size: 0.7rem;
+    color: #777;
+}
+
+.highlight-metric {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.history-sets-table {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history-set-item {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 1rem;
+    border-bottom: 1px dotted #3a3a3a;
+}
+
+.history-set-item:last-child {
+    border-bottom: none;
+}
+
+.history-set-item .set-number {
+    font-weight: bold;
+    color: #888;
+}
+
+.history-set-item .set-weight {
+    color: #ffc107;
+}
+
+.history-set-item .set-reps {
+    color: #4CAF50;
+}
+
+.history-set-item.set-done {
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+.no-history {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}
+
+/* --- Graph Container --- */
+.graph-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+/* --- Routine Styles --- */
+.routine-day, .routine {
+    margin-top: 0.2rem;
+    padding: 1rem;
+    border: var(--border-color) solid 0.15rem;
+    border-radius: 0.15rem;
+}
+
+/* --- Inline Edit Form (used in App.css for routines) --- */
+.inline-edit-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0;
+}
+
+.inline-edit-form input[type="number"] {
+    width: 3rem;
+    height: 0.5rem;
+}
+
+/* --- Empty State --- */
+.no-workouts {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+}
+
+/* --- Add Set Input Group --- */
+.add-set-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* --- Save Set Button --- */
+.save-set-button {
+    margin-top: 8px;
+}
+
+/* --- Set Weight/Reps Container --- */
+.set-weight-container {
+    display: inline-block;
+}
+
+.set-weight-container.editable-field {
+    cursor: pointer;
+}
+
+.set-weight-container.disabled-field {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.set-reps-container {
+    display: inline-block;
+    cursor: pointer;
+}

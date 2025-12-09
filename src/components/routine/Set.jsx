@@ -1,4 +1,4 @@
-import { Delete } from '../Icons';
+import { Delete } from '../common/Icons';
 import { Button, Typography, Space, Tooltip } from 'antd';
 const { Text } = Typography; // اینجا تداخلی با DOM نداریم
 export default function Set({myself, trashId, day, workout, setRoutines, Routines, foundRoutine, showWeight}) {

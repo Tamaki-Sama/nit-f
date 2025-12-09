@@ -1,4 +1,5 @@
-const ExercisePrelistDefault = [
+// Contains: Init values
+export const ExercisePrelistDefault = [
     {id: 1,name: "Pushups", category: "Chest", secondarycategory: "Triceps", countsByWeight: false, notes : "No much decription. "},
     {id: 2,name: "Air Squats", category: "Quads",secondarycategory: "Hams", countsByWeight: false, notes: "Its a good place to add notes for exercises. "},
     {id: 3,name: "Barbell Front Squats", category: "Quads",secondarycategory: "Hams", countsByWeight: true, notes: "Its a good place to add notes for exercises. "},
@@ -30,7 +31,7 @@ const ExercisePrelistDefault = [
     {id: 32,name: "Plank", category: "Core", countsByWeight: false, specialRepFlag: "sec", notes: " "},
     {id: 33,name: "Run", category: "Cardio", countsByWeight: false, specialRepFlag: "m", notes: "Distance measured in meters."},
 ]
-const CategoriesofExercisePrelistDefault = [
+export const CategoriesofExercisePrelistDefault = [
     {id: 1, name: "Chest", color: "red"}, 
     {id: 2, name: "Quads", color: "blue"},
     {id: 3, name: "Back", color: "green"},
@@ -40,7 +41,7 @@ const CategoriesofExercisePrelistDefault = [
     {id: 7, name: "Core", color: "brown"},
 ]
 
-const RoutinesDefault = [
+export const RoutinesDefault = [
     {id: 1, name: 'Bodyweight', days: [    {id: 1, name: "Push", routine: 'Bodyweight', workouts: [
         {id:1, name: "Dips", exerciseSets: [{id:1, weight: undefined, reps: 8}, {id:2, weight: undefined, reps: 8}, {id:3, weight: undefined, reps: 8}]},
         {id:2, name: "Pushups", exerciseSets: [{id:1, weight: undefined, reps: 25 }, {id:2, weight: undefined, reps: 25 } , {id:3, weight: undefined, reps: 25 }]},
@@ -61,6 +62,3 @@ const RoutinesDefault = [
         {id:2, name: "Dumbbell Curl", exerciseSets: [{id:1, weight: undefined, reps: 25 }, {id:2, weight: undefined, reps: 25 } , {id:3, weight: 8, reps: 25 }]},
     ]}]},
 ]
-
-
-export {ExercisePrelistDefault , CategoriesofExercisePrelistDefault, RoutinesDefault}

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Add } from "../Icons"
+import { Add } from "../common/Icons"
 import Day from "./Day"
 import { Input, Button } from "antd"
 

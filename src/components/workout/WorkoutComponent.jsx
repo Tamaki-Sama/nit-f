@@ -1,9 +1,9 @@
 // WorkoutComponent.jsx - آپدیت شده برای FitNotes Style و Weight/Reps
 import { Button, Input } from 'antd';
 import { useEffect, useState } from "react";
-import Set from "./Set-component";
-import '../App.css'
-import {Delete, Add} from './Icons'
+import Set from "./SetComponent";
+import '../../styles/Log.css'
+import {Delete, Add} from '../common/Icons'
 
 export default function WorkoutComponent ({workout, workoutID, effectLogData, OnSetChecked}) {
     // دو حالت جداگانه برای Reps و Weight

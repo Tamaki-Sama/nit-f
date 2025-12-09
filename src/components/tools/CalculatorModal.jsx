@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Modal, Button, Select, Space, Typography, Segmented, InputNumber, Form, Statistic, Alert, Row, Col } from 'antd';
 const { Title, Text } = Typography;
+import {DISTANCE_UNITS, PACE_UNITS, CALCULATOR_CATEGORIES, STRENGTH_TOOLS, UTILITY_TOOLS
+    , NUTRITION_TOOLS
+} from '../../utils/constants'
+import { calculateNRM, calculateOneRM, calculatePaceMinPerKm, timeToSeconds, secondsToTimeDisplay, distanceToMeters, paceToSecondsPerMeter } from '../../utils/calculations'
 export default function Calculator({onClose}) {
     const [selectedCategory, setSelectedCategory] = useState(CALCULATOR_CATEGORIES[0].value);
     const [selectedTool, setSelectedTool] = useState(STRENGTH_TOOLS[0].value);
@@ -922,88 +926,3 @@ function DistanceCalculatorComponent() {
         </Space>
     );
 }
-// --- ثابت‌های ماشین حساب Pace ---
-const DISTANCE_UNITS = [
-    { value: 'km', label: 'کیلومتر (km)' },
-    { value: 'm', label: 'متر (m)' },
-    { value: 'mile', label: 'مایل (mile)' },
-];
-const PACE_UNITS = [
-    { value: 'km', label: 'Min / km' },
-    { value: 'mile', label: 'Min / mile' },
-];
-// --- توابع تبدیل ---
-const CALCULATOR_CATEGORIES = [
-    { value: 'strength', label: 'ورزشی' },
-    { value: 'nutrition', label: 'تغذیه و بدن' },
-    { value: 'utility', label: 'ابزارهای کمکی' },
-];
-
-const STRENGTH_TOOLS = [
-    { value: '1rm', label: 'محاسبه حداکثر یک تکرار (1RM)' },
-    { value: 'volume_calc', label: 'محاسبه حجم کل (Volume)' }
-];
-const UTILITY_TOOLS = [
-    { value: 'pace_calc', label: 'محاسبه سرعت گام (Pace)' },
-    { value: 'distance_calc', label: 'محاسبه مسافت کل' },
-    { value: 'time_calc', label: 'محاسبه زمان کل' },
-];
-const NUTRITION_TOOLS = [
-    { value: 'tdee_calc', label: 'محاسبه کالری موردنیاز (TDEE)' },
-    { value: 'macro_calc', label: 'تفکیک غذایی (Macro)' }
-]
-const calculateOneRM = (weight, reps) => {
-    if (weight <= 0 || reps <= 0) return 0;
-    // 1RM = Weight * (1 + Reps / 30)
-    return weight * (1 + reps / 30);
-};
-const calculateNRM = (oneRM, targetReps) => {
-    return oneRM / (1 + targetReps / 30);
-};
-
-// تبدیل زمان ورودی (H/Min/Sec) به ثانیه
-const timeToSeconds = (h = 0, m = 0, s = 0) => (h * 3600) + (m * 60) + s;
-
-// تبدیل ثانیه به فرمت H:MM:SS (برای نمایش زمان کل)
-const secondsToTimeDisplay = (totalSeconds) => {
-    if (totalSeconds < 0 || isNaN(totalSeconds)) return '00:00';
-    const h = Math.floor(totalSeconds / 3600);
-    const remainder = totalSeconds % 3600;
-    const m = Math.floor(remainder / 60);
-    const s = Math.round(remainder % 60);
-    
-    let display = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    if (h > 0) {
-        // اگر ساعت وجود داشت، ساعت را هم اضافه کن
-        display = `${h}:` + display;
-    }
-    return display;
-};
-
-// تبدیل مسافت بر اساس واحد دلخواه به متر (به عنوان واحد پایه)
-const distanceToMeters = (value, unit) => {
-    if (value <= 0 || isNaN(value)) return 0;
-    switch (unit) {
-        case 'km': return value * 1000;
-        case 'mile': return value * 1609.34;
-        case 'm':
-        default: return value;
-    }
-};
-
-// محاسبه Pace بر حسب دقیقه بر کیلومتر (Min/km)
-const calculatePaceMinPerKm = (distanceMeters, timeSeconds) => {
-    if (distanceMeters <= 0 || timeSeconds <= 0) return 0;
-    // (Time in Seconds / Distance in Meters) * 1000m/km / 60s/min
-    const paceSecondsPerMeter = timeSeconds / distanceMeters;
-    const paceSecondsPerKm = paceSecondsPerMeter * 1000;
-    const paceMinutesPerKm = paceSecondsPerKm / 60; // Pace in Min/Km (e.g., 4.5 = 4:30 min/km)
-    return paceMinutesPerKm;
-};
-const paceToSecondsPerMeter = (paceMinPerKm) => {
-    if (paceMinPerKm <= 0 || isNaN(paceMinPerKm)) return 0;
-    // (Pace in Min/km) * 60 sec/min = seconds per km
-    const paceSecondsPerKm = paceMinPerKm * 60; 
-    // seconds per km / 1000 m/km = seconds per meter
-    return paceSecondsPerKm / 1000; 
-};

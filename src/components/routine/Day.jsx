@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Delete, Add, Gymroutines } from "../Icons";
+import { Delete, Add, Gymroutines } from "../common/Icons";
 import { Button, Typography } from "antd";
 const { Title } = Typography
-import WorkoutPicker from '../WorkoutPicker'
+import WorkoutPicker from '../pickers/WorkoutPicker'
 import Workout from "./Workout";
 export default function myself({date, LogData, myself, foundRoutine, Routines, setRoutines, setExercisePrelist, setCategoriesofExercisePrelist, ExercisePrelist, CategoriesofExercisePrelist, importRoutine}) {
     const [isPickerOpen, setIsPickerOpen] = useState(false);

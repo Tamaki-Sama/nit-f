@@ -245,5 +245,34 @@ export function ShareIcon(props) {
     </svg>
   )
 }
-
+export const CheckIcon = () => (
+  <svg className="icon check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+);
+export const SettingsIcon = (props) => (
+  <svg
+    // این مقادیر می‌توانند توسط پراپ‌ها بازنویسی شوند
+    className="icon settings-icon"
+    viewBox="0 0 24 24" 
+    
+    // تنظیمات استاندارد خطوط (stroke) برای آیکون‌های خطی (Line Icons)
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    
+    // پراپ‌های دریافتی از کاربر (مانند size, color, className اضافی و ...)
+    {...props}
+  >
+    {/* مسیر چرخ دنده */}
+    <path 
+      d="M12.22 2h-.44a2 2 0 0 0-2 2v.22a2 2 0 0 1-1.4 1.4L4 7.64l-1 1.73a2 2 0 0 0 1 3.46l.28.16a2 2 0 0 1 1 1.73v.5a2 2 0 0 0 2 2h.44a2 2 0 0 1 1.4 1.4l1.42 2.45a2 2 0 0 0 3.46-1l.16-.28a2 2 0 0 1 1.73-1h.5a2 2 0 0 0 2-2v-.44a2 2 0 0 1 1.4-1.4l2.45-1.42a2 2 0 0 0 1-3.46l-1.73-1a2 2 0 0 1-1-1.73v-.5a2 2 0 0 0-2-2h-.44a2 2 0 0 1-1.4-1.4L13.78 4a2 2 0 0 0-1-2z"
+    />
+    
+    {/* دایره مرکزی */}
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+);
 export {Add, Delete, Edit, Note, Circle, Trophy, Info , Confirm, Cancel, PageCopy, Gymroutines}

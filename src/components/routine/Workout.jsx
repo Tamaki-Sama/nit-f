@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Delete, Add } from "../Icons";
+import { Delete, Add } from "../common/Icons";
 import { Card, Button, Input, Space, Typography, Tooltip } from 'antd';
 const { Title } = Typography;
 import Set from './Set'

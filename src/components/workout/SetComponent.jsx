@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Confirm, Delete } from './Icons'
+import { Confirm, Delete } from '../common/Icons'
 import { Button, Checkbox, Input } from 'antd';
-import './Log.css'
+import '../../styles/Log.css'
 
 export default function Set ({setObject, setID, workoutID, setIndex, effectLogData, workoutSpecialRepFlag, countsByWeight, OnSetChecked}) {
     // 💡 Local State برای کنترل Input در حین ویرایش و جلوگیری از re-renderهای اضافی

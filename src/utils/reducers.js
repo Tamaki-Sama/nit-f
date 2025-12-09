@@ -1,4 +1,4 @@
-// AccessToLogData.jsx
+// reducers (LogData - BodyLogData) 175 Line :)
 
 export function AccessLogData(state, action) {
     switch (action.type) {
