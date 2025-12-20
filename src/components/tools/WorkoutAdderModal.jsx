@@ -2,23 +2,21 @@ import { useState } from "react";
 import { Modal, Space, Typography, Select, Input, Checkbox, Button} from "antd";
 const {Text, Title} = Typography
 const {Option} = Select
-export default function WorkoutAdder({onClose, pushNewWorkout, CategoriesofExercisePrelist, ExercisePrelist}) {
+export default function WorkoutAdder({onClose, pushNewWorkout, CategoriesofExercisePrelist, ExercisePrelist, notifapi}) {
     const [exerciseName, setExerciseName] = useState('');
-    const [category, setCategory] = useState(CategoriesofExercisePrelist[0].name || '');
+    const [category, setCategory] = useState('');
     const [countsByWeight, setCountsByWeight] = useState(true); 
     const [unitType, setUnitType] = useState(''); 
     const [notes, setNotes] = useState('')
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
-        
         if (!exerciseName.trim() || !category.trim()) {
-            alert('نام تمرین و دسته بندی نمی‌توانند خالی باشند!')
-            console.error('نام تمرین و دسته بندی نمی‌توانند خالی باشند!');
+            notifapi.error({title:'خطا',description: 'نام تمرین و دسته بندی نمی‌توانند خالی باشند!'})
             return;
         }
         if (ExercisePrelist.find(e => e.name == exerciseName)) {
-            alert('نام تمرین قبلا انتخاب شده است!')
+            notifapi.error({title:'خطا',description: 'نام تمرین قبلا انتخاب شده است!'})
             return;
         }
         const newWorkoutData = {
@@ -28,7 +26,6 @@ export default function WorkoutAdder({onClose, pushNewWorkout, CategoriesofExerc
             specialRepFlag: unitType.trim() === 'reps' || unitType.trim() === '' ? undefined : unitType.trim(),
             notes: notes
         };
-
         pushNewWorkout(newWorkoutData);
         onClose();
     };

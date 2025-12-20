@@ -7,7 +7,7 @@ import { Modal, Input, Button, List, Form, Typography, Divider } from 'antd';
 
 const { Search } = Input;
 const { Title, Text } = Typography;
-export default function WorkoutPicker({ onSelect, onClose, ExercisePrelist, setExercisePrelist, setCategoriesofExercisePrelist, CategoriesofExercisePrelist, pushNewWorkout }) {
+export default function WorkoutPicker({ onSelect, onClose, notifapi, ExercisePrelist, setExercisePrelist, setCategoriesofExercisePrelist, CategoriesofExercisePrelist, pushNewWorkout }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [newCategoryName, setNewCategoryName] = useState('');
     const [isAddingCategory, setIsAddingCategory] = useState(false);
@@ -15,28 +15,32 @@ export default function WorkoutPicker({ onSelect, onClose, ExercisePrelist, setE
     // 💡 تابع Selection حالا آبجکت کامل تمرین را پاس می‌دهد
     const handleSelection = (exercise) => {
         onSelect(exercise); 
-        onClose(); // بستن پس از انتخاب
+        onClose();
     };
     
-    // فیلتر کردن لیست بر اساس جستجوی کاربر
     const filteredList = useMemo( () => 
         ExercisePrelist.filter(exercise => 
         exercise.name.toLowerCase().includes(searchTerm.toLowerCase())
     ), [ExercisePrelist, searchTerm])
 
     const handleDeleteWorkout = (exerciseToDelete) => {
-        const updatedList = ExercisePrelist.filter(ex => ex.id !== exerciseToDelete.id);
-        setExercisePrelist(updatedList);
-        localStorage.setItem('ExercisePrelist', JSON.stringify(updatedList));
+        if (window.confirm(`آیا از حذف تمرین ${exerciseToDelete.name} مطمئنید؟`)) {
+            try {
+                const updatedList = ExercisePrelist.filter(ex => ex.id !== exerciseToDelete.id);
+                setExercisePrelist(updatedList);
+                localStorage.setItem('ExercisePrelist', JSON.stringify(updatedList));
+                notifapi.success({title: "عملیات موفق", description: `تمرین ${exerciseToDelete.name} حذف شد`})
+            } catch(e) {notifapi.error({title: 'خطا', description: e})}
+        }
     }
 
     const handleAddCategory = () => {
         if (!newCategoryName) {
-            console.error("Category name is required.");
+            notifapi.error({title: 'خطا' ,description: 'نام دسته بندی نمی تواند خالی باشد'});
             return;
         }
         
-        const maxId = CategoriesofExercisePrelist.reduce((max, cat) => cat.id > max ? cat.id : max, 0);
+        try { const maxId = CategoriesofExercisePrelist.reduce((max, cat) => cat.id > max ? cat.id : max, 0);
         const newCategory = {
             id: maxId + 1,
             name: newCategoryName,
@@ -45,21 +49,26 @@ export default function WorkoutPicker({ onSelect, onClose, ExercisePrelist, setE
         
         const updatedCategories = [...CategoriesofExercisePrelist, newCategory];
         setCategoriesofExercisePrelist(updatedCategories);
-        localStorage.setItem('CategoriesofExercisePrelist', JSON.stringify(updatedCategories));
+        localStorage.setItem('CategoriesofExercisePrelist', JSON.stringify(updatedCategories)); 
+        notifapi.success({title: 'عملیات موفق', description: `دسته ${newCategoryName} با موفقیت اضافه شد`})
+    } catch (error) {
+            notifapi.error({title: 'خطا', description: error})
+        }
         
         setNewCategoryName('');
         setIsAddingCategory(false);
     };
 
     const handleCategoryDeleteButton = (categoryToDelete) => {
-        // سختگیری: اخطار بدهید! با حذف دسته، تمرینات آن حذف نمی‌شوند اما دسته‌بندی آن‌ها خراب می‌شود.
         if (window.confirm(`آیا مطمئنید که می‌خواهید دسته "${categoryToDelete.name}" را حذف کنید؟ این عمل غیرقابل بازگشت است.`)) {
-            const updatedCategories = CategoriesofExercisePrelist.filter(cat => cat.id !== categoryToDelete.id);
-            setCategoriesofExercisePrelist(updatedCategories);
-            const updatedExercises = ExercisePrelist.filter(ex => ex.category !== categoryToDelete.name);
-            setExercisePrelist(updatedExercises)
-            localStorage.setItem('CategoriesofExercisePrelist', JSON.stringify(updatedCategories));
-            localStorage.setItem('CategoriesofExercisePrelist', JSON.stringify(updatedExercises));
+            try {
+                const updatedCategories = CategoriesofExercisePrelist.filter(cat => cat.id !== categoryToDelete.id);
+                setCategoriesofExercisePrelist(updatedCategories);
+                const updatedExercises = ExercisePrelist.filter(ex => ex.category !== categoryToDelete.name);
+                setExercisePrelist(updatedExercises)
+                notifapi.success({title: "عملیات موفق", description: `دسته بندی ${categoryToDelete.name} حذف شد`})
+            } catch(e) {notifapi.error({title: 'خطا', description: e})}
+
         }
     }
 
@@ -96,7 +105,7 @@ export default function WorkoutPicker({ onSelect, onClose, ExercisePrelist, setE
                 </Button>
             </div>
                 
-            {isWorkoutAdderOpen && (<WorkoutAdder onClose={() => setisWorkoutAdderOpen(false)} ExercisePrelist={ExercisePrelist} CategoriesofExercisePrelist={CategoriesofExercisePrelist} pushNewWorkout={pushNewWorkout}/>)}
+            {isWorkoutAdderOpen && (<WorkoutAdder onClose={() => setisWorkoutAdderOpen(false)} notifapi={notifapi} ExercisePrelist={ExercisePrelist} CategoriesofExercisePrelist={CategoriesofExercisePrelist} pushNewWorkout={pushNewWorkout}/>)}
 
 
             {/* فرم افزودن دسته جدید */}
@@ -181,7 +190,7 @@ export default function WorkoutPicker({ onSelect, onClose, ExercisePrelist, setE
                                         <List.Item
                                             actions={[
                                                 <Button type="text" danger icon={<span style={{ display: 'inline-flex', alignItems: 'center' }}>{Delete}</span>} onClick={(e) => {e.stopPropagation(); handleDeleteWorkout(exercise);}} key="delete"/>,
-                                                <Button type="text" icon={<span style={{ display: 'inline-flex', alignItems: 'center' }}>{CheckIcon()}</span>} onClick={(e) => {e.stopPropagation(); handleSelection(exercise);}} key="select"/>
+                                                <Button type="text" icon={<span style={{ display: 'inline-flex', alignItems: 'center',color: 'green' }}>{CheckIcon()}</span>} onClick={(e) => {e.stopPropagation(); handleSelection(exercise);}} key="select"/>
                                             ]}
                                             onClick={() => handleSelection(exercise)}
                                             style={{ cursor: 'pointer' }}

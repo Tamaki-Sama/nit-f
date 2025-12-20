@@ -41,3 +41,30 @@ export function UpdateModal({onClose, showAllUpdates}) {
         </Modal>
     )
 }
+export const showAntDConfirm = ({
+    title = "Confirm Action",
+    content = "Are you sure you want to proceed?",
+    okText = "Yes",
+    cancelText = "No",
+  } = {}) => {
+    // Return a new Promise that handles the result of the Modal
+    return new Promise((resolve) => {
+      Modal.confirm({
+        title: title,
+        content: content,
+        okText: okText,
+        cancelText: cancelText,
+        // Use danger styling for delete confirmation
+        okButtonProps: { danger: true }, 
+  
+        // Resolve the promise with true when the user clicks OK
+        onOk() {
+          resolve(true);
+        },
+        // Resolve the promise with false when the user clicks Cancel or closes the modal
+        onCancel() {
+          resolve(false);
+        },
+      });
+    });
+  };

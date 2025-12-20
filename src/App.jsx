@@ -5,6 +5,7 @@ import { getTodayJalaali, formatSecondsToMMSS } from './utils/formatters.js'
 import { UPDATE_LOGS } from './utils/constants.js'
 import { useLocalStorage, useTheme, useModal, useLogsOfDay, useLastId, useTimer } from "./utils/hooks.js"
 import { getSavedValue } from './utils/reader.js';
+import { getMaxId } from './utils/calculations.js'
 import {ExercisePrelistDefault, CategoriesofExercisePrelistDefault} from './utils/defaults.js'
 import { Edit, BaselineTimer, Delete, PageCopy, TrendIcon, Gymroutines, CalculatorIcon, CommentIcon, BodyIcon, ShareIcon, SettingsIcon } from "./components/common/Icons.jsx"
 import { AccessLogData, AccessBodyLogData } from "./utils/reducers.js"
@@ -103,32 +104,33 @@ export default function App() {
         }));
         closePicker(); 
     }
-    // #LOOKTHIS: neccessary values are marked 'required' and handlers are enough in WorkoutAdderModal.jsx
     const pushNewWorkout = (newWorkoutData) => {
-        const nextExerciseId = getMaxId(ExercisePrelist) + 1;
-        const nextCategoryId = getMaxId(CategoriesofExercisePrelist) + 1;
-        let CategoryFullObject = CategoriesofExercisePrelist.find(cat => cat.name===newWorkoutData.category)
-        if (!CategoryFullObject) {
-            CategoryFullObject = {id: nextCategoryId, name: newWorkoutData.category, color: "gray"}
-            setCategoriesofExercisePrelist(prevCats => [...prevCats, CategoryFullObject]);
+        try {
+            const nextExerciseId = getMaxId(ExercisePrelist) + 1;
+            const nextCategoryId = getMaxId(CategoriesofExercisePrelist) + 1;
+            let CategoryFullObject = CategoriesofExercisePrelist.find(cat => cat.name===newWorkoutData.category)
+            if (!CategoryFullObject) {
+                CategoryFullObject = {id: nextCategoryId, name: newWorkoutData.category, color: "gray"}
+                setCategoriesofExercisePrelist(prevCats => [...prevCats, CategoryFullObject]);
+            }
+            const newExercise = {
+                id: nextExerciseId,
+                ...newWorkoutData,
+                category: CategoryFullObject.name,
+                secondarycategory: undefined
+            };
+            setExercisePrelist(prevList => [...prevList, newExercise]);
+            notifapi.success({title: 'عملیات موفق',description: `تمرین ${newWorkoutData.name} با موفقیت اضافه شد`}) 
+        } catch(error) {
+            notifapi.error({title: 'خطا',description: error}) 
         }
-        const newExercise = {
-            id: nextExerciseId,
-            ...newWorkoutData,
-            category: CategoryFullObject.name,
-            secondarycategory: undefined
-        };
-        setExercisePrelist(prevList => [...prevList, newExercise]);
-    };
 
-    // #LOOKTHIS: No problem on 'Date Parsing Vulnerability', date format is always this and never changes.
+    };
     const handleDateSelection = (lastChosen) => {
         setSelectedDate(lastChosen)
     }
         
     const timer = useTimer(60, true)
-
-    // fast transfer between days without openning DatePicker
     function changeDateDays (date_string, change) {
         let day = Number(date_string[8] + date_string[9])
         let month = Number(date_string[5] + date_string[6])
@@ -242,7 +244,7 @@ export default function App() {
             {isUpdateModalOpen && <UpdateModal onClose={() => {closeUpdateModal(); localStorage.setItem(LAST_VIEWED_LOG_KEY, JSON.stringify(LATEST_LOG_ID))}} showAllUpdates={false} />}
             {isTimerOpen && <Timer onClose={closeTimer} timer={timer} />}
             {isCheaterOpen && (<Cheater notifCall={notifapi} nextWorkoutId={nextWorkoutId} onClose={closeCheater} lastChosenDate={SelectedDate} LogData={LogData} setNewLogData={setNewLogData} effectLogData={effectLogData} />)}
-            {isWorkoutDetailsOpen && (<WorkoutDetails ExercisePrelist={ExercisePrelist} LogData={LogData} onClose={closeWorkoutDetails} lastChosen={newLogData.name} /> )}
+            {isWorkoutDetailsOpen && (<WorkoutDetails CategoriesOfExercisePrelist={CategoriesofExercisePrelist} ExercisePrelist={ExercisePrelist} LogData={LogData} onClose={closeWorkoutDetails} lastChosen={newLogData.name} /> )}
             {isRoutineUserOpen && (<RoutineUser date={SelectedDate} LogData={LogData} setExercisePrelist = {setExercisePrelist} setCategoriesofExercisePrelist ={setCategoriesofExercisePrelist} onClose={CloseRoutineUser} importRoutine={importRoutine} ExercisePrelist={ExercisePrelist} CategoriesofExercisePrelist={CategoriesofExercisePrelist} />)} 
             {isCalculatorOpen && (<Calculator onClose={closeCalculator} LogData={LogData} />)}
             {isCommentAdderOpen && (<CommentAdder onClose={closeCommentAdder} date={SelectedDate} Comments={Comments} setComments={setComments} />)}
@@ -254,7 +256,7 @@ export default function App() {
                 {/* Tools */}
                 <div>
                     <Button onClick={toggleTheme} style={{width: '48px', height: '48px'}}>{isDarkMode ? <SunOutlined /> : <MoonOutlined />}</Button>
-                    <Button className="" onClick={openTimer} style={{width: '48px', height: '48px'}}>{timer.isActive ? <span>{formatSecondsToMMSS(timer.seconds)}</span> :   <BaselineTimer /> } </Button>
+                    <Button onClick={openTimer} style={{width: '48px', height: '48px'}}>{timer.isActive ? formatSecondsToMMSS(timer.seconds) :   <BaselineTimer /> }</Button>
                     <Button onClick={openCheater} style={{width: '48px', height: '48px'}}><PageCopy /></Button>
                     <Button style={{width: '48px', height: '48px'}} onClick={openWorkoutDetails}><TrendIcon /></Button>
                     <Button style={{width: '48px', height: '48px'}} onClick={openRoutineUser}><Gymroutines /></Button>
@@ -295,6 +297,7 @@ export default function App() {
                         setExercisePrelist = {setExercisePrelist}
                         setCategoriesofExercisePrelist ={setCategoriesofExercisePrelist}
                         pushNewWorkout={pushNewWorkout}
+                        notifapi={notifapi}
                     />
                 )}
 
@@ -331,5 +334,19 @@ export default function App() {
             </audio>
         </>
     )
-    
 }
+// Todo:
+// [d] monthly and weekly graph.
+// [d] icons: (Settings - CheckAll)
+// [d] Check/Uncheck all btn: fast proccess for working on all of sets on a workout.
+// [d] Timer btn problem: why is it smaller?
+// [d] Light mode problems: invincible borders!
+// [d] Graph only shows tooltip date for light mode and not dark mode.
+// [d] Monthly graph shouldn't show days.
+// [d] timer's sound should have a checkbox.
+// [d] graph values currection
+// [d] routines set delete problem
+// [d] Routines Inline Editing !
+// [d] Better Set Adding Logic !
+// [d] New Body Log page !
+// [d] Timer problem fixed (starting timer again was needs to click Reset.)

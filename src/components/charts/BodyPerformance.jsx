@@ -1,32 +1,30 @@
 import { useState, useMemo } from 'react';
 import { Select, Card, Space, Typography, Row, Col } from 'antd';
 import Graph from './Graph'; 
-import { getPerformanceDataForGraph } from '../../utils/calculations';
 import { TIME_PERIODS } from '../../utils/constants';
 const { Text } = Typography;
 
-export default function WorkoutPerformanceDetails({ LogData, exerciseName, METRICS }) {
+export default function BodyPerformanceDetails({ BodyLogData, METRICS }) {
     const initialMetric = METRICS[0].value; 
     const [selectedMetricKey, setSelectedMetricKey] = useState(initialMetric);
     const [selectedTimePeriod, setSelectedTimePeriod] = useState(TIME_PERIODS[0].value);
     const selectedMetric = METRICS.find(m => m.value === selectedMetricKey);
     
     const graphData = useMemo(() => {
-        return getPerformanceDataForGraph(LogData, exerciseName, selectedMetricKey, selectedTimePeriod);
-    }, [LogData, exerciseName, selectedMetricKey, selectedTimePeriod]);
+        return BodyLogData
+            .filter(log => log.metr === selectedMetric.value) // <-- اصلاح شد
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+    }, [BodyLogData, selectedMetricKey]);
 
     let unit;
-    if (selectedMetricKey === '1rm' || selectedMetricKey === 'max_weight') unit = 'kg'
-    if (selectedMetricKey === 'workout_volume' || selectedMetricKey === 'max_volume_set') unit = 'kg*reps'
-    if (selectedMetricKey === 'workout_reps' || selectedMetricKey === 'max_reps') unit = 'reps'
-    if (selectedMetricKey === 'max_time') unit = 'sec'
-    if (selectedMetricKey === 'max_distance') unit = 'm'
+    if (selectedMetricKey === 'BodyWeight') unit = 'kg'
+    if (selectedMetricKey === 'BodyFat') unit = '%'
     return (
-        <Card title={exerciseName ? `پیشرفت تمرین: ${exerciseName}` : `انتخاب نشده`} size="small" style={{ marginTop: 20 }}>
+        <Card title={selectedMetricKey ? `تغییرات مشخصه: ${selectedMetric.label}` : `انتخاب نشده`} size="small" style={{ marginTop: 20 }}>
             <Space orientation="vertical" style={{ width: '100%' }}>
                 <Row>
                     <Col span={12}>
-                        <Text strong>متریک پیشرفت</Text>
+                        <Text strong>متریک</Text>
                         <Select
                             style={{ width: 250 }}
                             value={selectedMetricKey}

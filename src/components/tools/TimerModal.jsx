@@ -61,6 +61,7 @@ export default function Timer({onClose, timer}) {
                 </div>
             </form>
             <Title level={5}><Checkbox checked={timer.autoStart} onChange={() => {timer.setAutoStart(!timer.autoStart)}} /> شروع خودکار بعد از تیک خوردن</Title>
+            <Title level={5}><Checkbox checked={timer.playSound} onChange={() => {timer.setPlaySound(!timer.playSound)}} /> پخش صدا</Title>
         </Modal>
     )
 }

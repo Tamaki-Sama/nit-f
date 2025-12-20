@@ -105,8 +105,13 @@ export default function Workout({myself, Routines,setRoutines, day, foundRoutine
                         myself={set} 
                         key={sid} 
                         trashId={sid} 
-                        // ... (بقیه پراپ‌ها) ...
+                        Routines={Routines}
                         showWeight={iHaveWeight} 
+                        setRoutines={setRoutines}
+                        day={day}
+                        workout={myself}
+                        foundRoutine={foundRoutine}
+                        
                     />
                 )}
             </div>

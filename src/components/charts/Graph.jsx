@@ -1,24 +1,24 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card, Typography } from 'antd';
+import { formatJalaaliDateForGraph } from '../../utils/formatters'; 
 const { Text } = Typography;
-/**
- * کامپوننت نمایش گراف لاگ بدن
- * @param {Array<Object>} data - آرایه‌ای از آبجکت‌ها: [{ id: 1, value: 78.5 }, ...]
- * @param {string} dataKeyX - کلید مورد استفاده برای محور افقی (X): معمولاً 'id' یا 'date'
- * @param {string} dataKeyY - کلید مورد استفاده برای محور عمودی (Y): معمولاً 'value'
- * @param {string} name - نام سری داده (مثلاً 'وزن' یا 'چربی')
- * @param {string} unit - واحد اندازه‌گیری (مثلاً 'kg' یا '%')
- */
-export default function Graph({ data, dataKeyX, dataKeyY, name, unit }) {
+
+export default function Graph({ data, dataKeyX, dataKeyY, name, unit, selectedTimePeriod }) {
     
     if (!data || data.length === 0) {
         return (
             <Card style={{ textAlign: 'center', marginTop: 20 }}>
-                <Text type="secondary">داده‌ای برای نمایش {name} وجود ندارد. لاگ‌های جدید اضافه کنید.</Text>
+                <Text type="secondary">داده‌ای برای نمایش {name} وجود ندارد. اطلاعات جدید اضافه کنید یا گزینه انتخاب شده را تصحیح کنید.</Text>
             </Card>
         );
     }
     const yAxisFormatter = (value) => `${value} ${unit || ''}`;
+    const xAxisFormatter = (dateString) => {
+        if (!selectedTimePeriod || selectedTimePeriod === 'day') {
+            return dateString;
+        }
+        return formatJalaaliDateForGraph(dateString, selectedTimePeriod);
+    };
     return (
             <div style={{ width: '100%' }}>
                 <ResponsiveContainer width="100%" aspect={16 / 9}>
@@ -26,29 +26,24 @@ export default function Graph({ data, dataKeyX, dataKeyY, name, unit }) {
                         data={data}
                         margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
                     >
-                        {/* شبکه‌بندی پس‌زمینه */}
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
                         
-                        {/* محور X (افقی): آیدی یا تاریخ */}
-                        {/* ما از 'id' به عنوان کلید استفاده می‌کنیم، اما می‌توانیم از یک Label سفارشی استفاده کنیم. */}
                         <XAxis 
                             dataKey={dataKeyX} 
-                            interval="preserveStartEnd" // حفظ شروع و پایان
-                            tick={{ fill: '#ffffffff', fontSize: 8, fontWeight: 'light' }}
+                            interval="preserveStartEnd"
+                            tick={{ fill: 'var(--border-color)', fontSize: 8, fontWeight: 'light' }}
+                            tickFormatter={xAxisFormatter}
                         />
                         <YAxis 
                             tickFormatter={yAxisFormatter} 
-                            stroke="rgba(255, 255, 255, 0.85)"
-                            
-                            // ✅ تنظیمات برای استفاده بهینه از فضا
+                            stroke="var(--border-color)"
                             axisLine={false}
                             tickLine={false}
                         />
-                        
                         <Tooltip 
                             formatter={(value) => [Math.round(value)]} 
                             labelFormatter={(label) => label}
-                            labelStyle={{display: 'inline',width: 'fit-content', height: 'fit-content'}}
+                            labelStyle={{display: 'inline',width: 'fit-content', height: 'fit-content', color: '#262626'}}
                         />
                         <Line 
                             type="monotone" // نوع خط (برای نرمی)

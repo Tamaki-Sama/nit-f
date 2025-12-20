@@ -1,15 +1,15 @@
 // general calculations
-
-
+import { MAX_REPS_FOR_1RM } from './constants';
+import { toGregorian, toJalaali } from 'jalaali-js';
 // Performance calculations
 export const calculateOneRM = (weight, reps) => {   
     if (!weight || reps === 0) return 0;
     let localReps = reps
-    if (localReps > 13) localReps = 13 // 13 = recommended maximum rep for better 1rm calculations
+    if (localReps > MAX_REPS_FOR_1RM) localReps = MAX_REPS_FOR_1RM
     return weight * (1 + reps / 30);
 };
 export function calculateSetVolume(set) {
-    const weight = set.weight !== undefined ? set.weight : 1; // وزن بدن را 1 فرض می‌کنیم
+    const weight = set.weight !== undefined ? set.weight : 1; 
     return set.reps * weight;
 }
 export const calculateNRM = (oneRM, targetReps) => {
@@ -140,38 +140,123 @@ export const calculateExerciseMetrics = (exerciseLog) => {
         workout_reps: totalReps,
     };
 };
-export function getPerformanceDataForGraph(LogData, exerciseName, metricKey){
+export function aggregatePerformanceData(dailyData, metricKey, period) {
     
-    // ۱. گروه‌بندی کل داده‌ها، با فیلتر کردن بر اساس نام تمرین
-    // نتیجه: [{ date: '1404/09/01', logs: [ {name: 'پرس سینه', ...} ] }, ...]
-    const dailyExerciseLogs = sortInDate(LogData, exerciseName);
+    if (period === 'day') {
+        return dailyData;
+    } 
     
-    const graphData = [];
+    // تعیین کلید گروه‌بندی بر اساس دوره زمانی
+    let keyGenerator;
+    if (period === 'month') {
+        keyGenerator = getMonthKey;
+    } else if (period === 'week') {
+        keyGenerator = getWeekKey; // ✨ استفاده از تابع هفتگی جدید
+    } else {
+        return dailyData; // اگر دوره نامعتبر باشد، به روزانه برمی‌گردد.
+    }
     
-    // ۲. تکرار روی لاگ‌های روزانه فیلتر شده
-    for (const dailyLog of dailyExerciseLogs) {
-        // چون در sortInDate فیلتر اعمال شده، dailyLog.logs فقط شامل یک نوع تمرین است.
-        
-        // 💡 سختگیری: اگر یک تمرین در روز بیش از یک بار ثبت شود (چند Log برای یک اسم)،
-        // باید تمام ست‌های آن ادغام شوند یا از لاگ اول استفاده شود.
-        // فرض می‌کنیم در اینجا، چون تمرینات از LogData گرفته شده، هر روز حداکثر یک آبجکت برای آن تمرین دارد.
-        const exerciseLog = dailyLog.logs[0]; 
+    // منطق تجمیع (یکسان برای هفتگی و ماهانه)
+    const groupedData = dailyData.reduce((acc, item) => {
+        const periodKey = keyGenerator(item.date);
+        if (!periodKey) return acc;
 
+        if (!acc[periodKey]) {
+            acc[periodKey] = {
+                date: periodKey,
+                values: []
+            };
+        }
+        acc[periodKey].values.push(item.value);
+        return acc;
+    }, {});
+
+    // تجمیع مقادیر گروه‌بندی شده
+    const aggregated = Object.values(groupedData).map(group => {
+        let finalValue;
+        
+        // تعیین روش تجمیع (Max یا Sum)
+        if (metricKey === '1rm' || metricKey === 'max_weight' || metricKey === 'max_volume_set') {
+            // برای قدرت: بیشترین مقدار
+            finalValue = Math.max(...group.values);
+        } else {
+            // برای حجم و تکرارها: مجموع مقادیر
+            finalValue = group.values.reduce((sum, val) => sum + val, 0);
+        }
+        
+        return {
+            date: group.date, 
+            value: Math.round(finalValue)
+        };
+    });
+
+    return aggregated; 
+}
+
+
+// 🔄 به‌روزرسانی تابع اصلی برای دریافت داده‌های نمودار
+export function getPerformanceDataForGraph(LogData, exerciseName, metricKey, timePeriod = 'day'){
+    
+    // ۱ و ۲: استخراج داده‌های روزانه خام
+    // (همان منطق قبلی)
+    const dailyExerciseLogs = sortInDate(LogData, exerciseName);
+    const rawGraphData = [];
+    
+    for (const dailyLog of dailyExerciseLogs) {
+        const exerciseLog = dailyLog.logs[0]; 
         if (exerciseLog && exerciseLog.sets.length > 0) {
-            // ۳. محاسبه متریک‌ها (1RM، Volume و...) برای لاگ آن روز
             const metrics = calculateExerciseMetrics(exerciseLog);
-            
             const value = metrics[metricKey];
-            
             if (value > 0) { 
-                graphData.push({
-                    date: dailyLog.date, // محور X
-                    value: value,        // محور Y
+                rawGraphData.push({
+                    date: dailyLog.date, 
+                    value: value,        
                 });
             }
         }
     }
     
-    // ۳. این آرایه قبلاً در sortInDate مرتب شده است.
-    return graphData;
+    // ۳. ✨ مرحله تجمیع داده‌ها
+    // پارامتر metricKey را به تابع تجمیع می‌دهیم تا بداند Max بگیرد یا Sum
+    const aggregatedData = aggregatePerformanceData(rawGraphData, metricKey, timePeriod); // <== ارسال metricKey
+    
+    return aggregatedData;
+};
+// 💡 تابع کمکی برای استخراج کلید بازه زمانی (ماهانه)
+const getMonthKey = (dateString) => {
+    const parts = dateString.split('/');
+    if (parts.length < 2) return null;
+    
+    return `${parts[0]}/${parts[1]}/01`;
+};
+const WEEK_START_DAY = 6;
+const getWeekKey = (dateString) => {
+    const [jy, jm, jd] = dateString.split('/').map(Number);
+    
+    // 1. تبدیل به میلادی (برای استفاده از getDay)
+    const g = toGregorian(jy, jm, jd);
+    const gDate = new Date(g.gy, g.gm - 1, g.gd);
+    
+    // 2. پیدا کردن روز هفته میلادی (0=یکشنبه تا 6=شنبه)
+    let dayOfWeek = gDate.getDay(); // 6 = شنبه (Saturday)
+    
+    // 3. محاسبه روزهای لازم برای رسیدن به شنبه (اول هفته)
+    let daysToSubtract;
+    if (dayOfWeek === 6) { // اگر شنبه باشد
+        daysToSubtract = 0;
+    } else {
+        // مثال: یکشنبه (0) --> باید 1 روز به عقب برگردیم.
+        // مثال: جمعه (5) --> باید 6 روز به عقب برگردیم.
+        daysToSubtract = dayOfWeek + 1;
+    }
+
+    // 4. کم کردن روزها (نیاز به منطق/تابع کمکی برای کم کردن روز از تاریخ میلادی)
+    // new Date().setDate() را استفاده کنید و سپس به شمسی برگردانید.
+    gDate.setDate(gDate.getDate() - daysToSubtract);
+    
+    // 5. تبدیل تاریخ میلادی جدید به شمسی
+    const finalJalaali = toJalaali(gDate.getFullYear(), gDate.getMonth() + 1, gDate.getDate());
+    
+    // 6. فرمت دهی خروجی
+    return `${finalJalaali.jy}/${String(finalJalaali.jm).padStart(2, '0')}/${String(finalJalaali.jd).padStart(2, '0')}`;
 };

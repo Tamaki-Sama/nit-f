@@ -7,7 +7,7 @@ import { calculateSetVolume, calculateOneRM } from '../../utils/calculations';
 import { Modal, Typography, Space } from 'antd'
 const { Title } = Typography
 import WorkoutPickerReadOnly from '../pickers/WorkoutPickerReadOnly'
-export default function WorkoutDetails({LogData, onClose, lastChosen, ExercisePrelist}) {
+export default function WorkoutDetails({LogData, onClose, lastChosen, ExercisePrelist, CategoriesOfExercisePrelist}) {
     const [targetName, setTargetName] = useState(lastChosen)
     const [fullObj, setFullObj] = useState(ExercisePrelist.find( e => e.name === targetName ))
     const handleWorkoutSelection = (selectedExercise) => {
@@ -160,6 +160,7 @@ export default function WorkoutDetails({LogData, onClose, lastChosen, ExercisePr
                         onSelect={handleWorkoutSelection}
                         onClose={closePicker} 
                         ExercisePrelist={ExercisePrelist}
+                        CategoriesOfExercisePrelist={CategoriesOfExercisePrelist}
                     />
                 )}
                 <WorkoutPerformanceDetails

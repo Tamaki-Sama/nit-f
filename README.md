@@ -160,28 +160,6 @@ To preview the production build:
 npm run preview
 ```
 
-## 📁 Project Structure
-
-```
-nit.f/
-├── src/
-│   ├── components/          # React components
-│   │   ├── Calculator.jsx   # Calculator tools
-│   │   ├── Calendar.jsx     # Date picker component
-│   │   ├── Graph.jsx        # Progress charts
-│   │   ├── Tools.jsx        # Main tools panel
-│   │   ├── WorkoutPicker.jsx # Exercise selection
-│   │   └── routineComps/    # Routine management components
-│   ├── App.jsx              # Main application component
-│   ├── App.css              # Application styles
-│   ├── main.jsx             # Application entry point
-│   └── index.css            # Global styles
-├── public/                  # Static assets
-├── dist/                    # Production build output
-├── package.json             # Dependencies and scripts
-└── vite.config.js          # Vite configuration
-```
-
 ## 🔧 Available Scripts
 
 - `npm run dev` - Start development server with hot reload
@@ -230,35 +208,5 @@ Recommended browsers:
 - Chrome/Edge (latest)
 - Firefox (latest)
 - Safari (latest)
-
-## 📝 Version History
-
-The application includes an update log system. View recent updates and new features by checking the update modal that appears when new versions are released.
-
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to contribute:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📄 License
-
-[Specify your license here]
-
-## 🙏 Acknowledgments
-
-- Built with [React](https://react.dev/)
-- UI components from [Ant Design](https://ant.design/)
-- Charts powered by [Recharts](https://recharts.org/)
-- Date handling with [jalaali-js](https://github.com/jalaali/jalaali-js)
-- Bundled with [Vite](https://vitejs.dev/)
-
-## 📧 Support
-
-For issues, questions, or suggestions, please open an issue in the repository or contact the maintainers.
-
----
 
 **Note**: This is a web-based application that runs in your browser. All data is stored locally and does not require an internet connection after the initial load (except for loading the application itself).

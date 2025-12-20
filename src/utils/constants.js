@@ -1,6 +1,6 @@
 // CONSTANT values
 export {DATE_FILTERS, DISTANCE_UNITS, PACE_UNITS, CALCULATOR_CATEGORIES, STRENGTH_TOOLS, UTILITY_TOOLS
-    , NUTRITION_TOOLS
+    , NUTRITION_TOOLS, TIME_PERIODS,MAX_REPS_FOR_1RM, BODYLOG_METRICS,
 }
 const DATE_FILTERS = [
     { value: 'all', label: 'همه زمان‌ها' },
@@ -40,7 +40,15 @@ const NUTRITION_TOOLS = [
     { value: 'tdee_calc', label: 'محاسبه کالری موردنیاز (TDEE)' },
     { value: 'macro_calc', label: 'تفکیک غذایی (Macro)' }
 ]
-
+const TIME_PERIODS = [
+    { value: 'day', label: 'روزها' },
+    { value: 'week', label: 'هفته' },
+    { value: 'month', label: 'ماه' },
+]
+const BODYLOG_METRICS = [
+    { label:'درصد چربی (%)', value:'BodyFat' },{ label:'وزن (kg)', value:'BodyWeight' }
+]
+const MAX_REPS_FOR_1RM = 13
 export const UPDATE_LOGS = [
     {
         id: 1,

@@ -123,3 +123,6 @@
     height: 32px;
     padding: 0;
 }
+.bolder-checkboxes .ant-checkbox-inner, .workout {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}

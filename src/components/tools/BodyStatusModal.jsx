@@ -1,8 +1,9 @@
 import { Modal, Space, Button, Typography, InputNumber, Form, Card, List, Row, Col, Select, Alert } from 'antd'
 const {Title, Text } = Typography
 import {useLastId} from '../../utils/hooks'
-import Graph from '../charts/Graph'
+import BodyPerformanceDetails from '../charts/BodyPerformance'
 import { message } from 'antd'
+import { BODYLOG_METRICS } from '../../utils/constants'
 export default function BodyStatus({onClose,BodyLogData, effectBodyLogData, lastDate}) {
     const [form] = Form.useForm()
     const nextId = useLastId(BodyLogData)
@@ -23,12 +24,6 @@ export default function BodyStatus({onClose,BodyLogData, effectBodyLogData, last
         })
         message.success('لاگ بدن با موفقیت حذف شد')
     }
-    const weightLogs = BodyLogData
-    .filter(log => log.metr === 'BodyWeight')
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-    const fatLogs = BodyLogData
-    .filter(log => log.metr === 'BodyFat')
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
     return (
         <Modal
         open={true}
@@ -51,7 +46,7 @@ export default function BodyStatus({onClose,BodyLogData, effectBodyLogData, last
                             label='متریک'
                             rules={[{ required:true, message: 'انتخاب نوع متریک الزامی است' }]}
                             >
-                                <Select size="large" options={[{ label:'درصد چربی (%)', value:'BodyFat' },{ label:'وزن (kg)', value:'BodyWeight' }]} />
+                                <Select size="large" options={BODYLOG_METRICS} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -75,6 +70,10 @@ export default function BodyStatus({onClose,BodyLogData, effectBodyLogData, last
                         </Button>
                     </Form.Item>
                 </Form>
+                <BodyPerformanceDetails 
+                    BodyLogData={BodyLogData}
+                    METRICS={BODYLOG_METRICS}
+                />
                 <Card 
                     title="تاریخچه لاگ بدن" 
                     style={{ marginTop: 20 }}
@@ -88,7 +87,9 @@ export default function BodyStatus({onClose,BodyLogData, effectBodyLogData, last
                             paddingRight: 10 // برای جبران نوار اسکرول
                         }}
                         dataSource={BodyLogData}
-                        renderItem={(item) => (
+                        renderItem={(item) => {
+                            const metricDetails = BODYLOG_METRICS.find(m => m.value === item.metr);
+                            return (
                             <List.Item
                                 actions={[
                                     // دکمه حذف لاگ (باید effectBodyLogData را فراخوانی کند)
@@ -104,40 +105,22 @@ export default function BodyStatus({onClose,BodyLogData, effectBodyLogData, last
                                 ]}
                             >
                                 <List.Item.Meta
-                                    // Title و Description می‌توانند از داده‌های لاگ استفاده کنند
                                     title={
                                         <Space>
                                             <Text strong style={{ color: 'var(--primary-color)' }}>
-                                                {item.value} {item.metr === 'BodyWeight' ? 'کیلوگرم' : '% چربی'}
+                                                {item.value} {metricDetails ? metricDetails.label : 'نامشخص'}
                                             </Text>
                                             <Text type="secondary">
                                                 در تاریخ {item.date}
                                             </Text>
                                         </Space>
                                     }
-                                    description={item.metr === 'BodyWeight' ? 'وزن بدن' : 'درصد چربی بدن'}
                                 />
                             </List.Item>
-                        )}
+                        )}}
                     />
 
                 </Card>
-
-
-                <Graph
-                    data={weightLogs}
-                    dataKeyX="date"
-                    dataKeyY="value"
-                    name="وزن بدن"
-                    unit="کیلوگرم"
-                />
-                <Graph
-                    data={fatLogs}
-                    dataKeyX="date" 
-                    dataKeyY="value"
-                    name="درصد چربی"
-                    unit="%"
-                />
             </Space>
         </Modal>
     )

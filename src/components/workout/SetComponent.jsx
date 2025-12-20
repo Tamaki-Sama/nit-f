@@ -9,7 +9,6 @@ export default function Set ({setObject, setID, workoutID, setIndex, effectLogDa
     // استفاده از || 0 برای تضمین مقدار عددی در حالت ویرایش وزن
     const [currentWeight, setCurrentWeight] = useState(setObject.weight || 0);
 
-    // 💡 Sync کردن Local State با props هرگاه setID تغییر کند (برای جلوگیری از باگ‌های UI)
     useEffect(() => {
         setCurrentReps(setObject.reps);
         setCurrentWeight(setObject.weight || 0);
@@ -136,10 +135,13 @@ export default function Set ({setObject, setID, workoutID, setIndex, effectLogDa
                     </span>
                 )}
             </span>
-            <Checkbox 
-                checked={setObject.done || false} 
-                onChange={handleCheck} 
-            />
+            <div className="bolder-checkboxes">
+                <Checkbox 
+                    checked={setObject.done || false} 
+                    onChange={handleCheck}
+                />                
+            </div>
+
             <Button type="text" danger icon={Delete} onClick={deletethisSet} size="large" />
         </li>
     )

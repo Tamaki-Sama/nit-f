@@ -2,7 +2,7 @@ const Edit = <svg width="24" height="24"viewBox="0 0 24 24" fill="none" stroke="
 const Add = <svg width="24" height="24"viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
 const Delete = <svg width="24" height="24"viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
 const Note = <svg width="24" height="24"viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-const Circle = <svg width="24" height="24"viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+const Circle = <svg width="24" height="24"viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle></svg>
 const Info = <svg width="24" height="24"viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
 const Trophy = <svg width="24" height="24"viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5h15a2.5 2.5 0 0 1 0 5H18"></path><path d="M6 9v14h12V9"></path><path d="M12 21V9"></path></svg>
 const Confirm = <svg width="24" height="24"viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -62,6 +62,27 @@ export function BaselineTimer(props) {
     </svg>
   )
 }
+export function CheckmarkDoneSharp(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      width="1em"
+      height="1em"
+      {...props}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeMiterlimit="10"
+        strokeWidth="44"
+        d="M465 127L241 384l-92-92m-9 93l-93-93m316-165L236 273"
+      ></path>
+    </svg>
+  )
+}
+
 export function CalculatorIcon(props) {
   return (
     <svg
@@ -250,29 +271,21 @@ export const CheckIcon = () => (
       <polyline points="20 6 9 17 4 12"></polyline>
   </svg>
 );
-export const SettingsIcon = (props) => (
-  <svg
-    // این مقادیر می‌توانند توسط پراپ‌ها بازنویسی شوند
-    className="icon settings-icon"
-    viewBox="0 0 24 24" 
-    
-    // تنظیمات استاندارد خطوط (stroke) برای آیکون‌های خطی (Line Icons)
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    
-    // پراپ‌های دریافتی از کاربر (مانند size, color, className اضافی و ...)
-    {...props}
-  >
-    {/* مسیر چرخ دنده */}
-    <path 
-      d="M12.22 2h-.44a2 2 0 0 0-2 2v.22a2 2 0 0 1-1.4 1.4L4 7.64l-1 1.73a2 2 0 0 0 1 3.46l.28.16a2 2 0 0 1 1 1.73v.5a2 2 0 0 0 2 2h.44a2 2 0 0 1 1.4 1.4l1.42 2.45a2 2 0 0 0 3.46-1l.16-.28a2 2 0 0 1 1.73-1h.5a2 2 0 0 0 2-2v-.44a2 2 0 0 1 1.4-1.4l2.45-1.42a2 2 0 0 0 1-3.46l-1.73-1a2 2 0 0 1-1-1.73v-.5a2 2 0 0 0-2-2h-.44a2 2 0 0 1-1.4-1.4L13.78 4a2 2 0 0 0-1-2z"
-    />
-    
-    {/* دایره مرکزی */}
-    <circle cx="12" cy="12" r="3"/>
-  </svg>
-);
+export function SettingsIcon(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width="1em"
+      height="1em"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="M19.14 12.94c.04-.3.06-.61.06-.94c0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6s3.6 1.62 3.6 3.6s-1.62 3.6-3.6 3.6"
+      ></path>
+    </svg>
+  )
+}
+
 export {Add, Delete, Edit, Note, Circle, Trophy, Info , Confirm, Cancel, PageCopy, Gymroutines}

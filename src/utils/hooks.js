@@ -63,23 +63,24 @@ export function useLogsOfDay(LogData, SelectedDate) {
      [LogData, SelectedDate])
     return result;
 }
-export function useTimer(initialInputTime = 60, initialAutoStart = true) {
+export function useTimer(initialInputTime = 60, initialAutoStart = true, initialPlaySound = false) {
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(false);
     const [inputTime, setInputTime] = useState(initialInputTime);
     const [autoStart, setAutoStart] = useState(initialAutoStart);
+    const [playSound, setPlaySound] = useState(initialPlaySound);
     const timerRef = useRef(null);
     const audioRef = useRef(null);
-    const playAlarmSound = useCallback(() => {
+    const playAlarmSound = () => {
         const audio = audioRef.current;
-        if (audio) {
-            audio.play().catch(e => {
-                console.error("Error playing audio, probably blocked by browser:", e);
-            });
+        if (playSound){
+            if (audio) {
+                audio.play().catch(e => {
+                    console.error("Error playing audio, probably blocked by browser:", e);
+                });
+            }
         }
-    }, []);
-
-    // Timer countdown logic
+    };
     useEffect(() => {
         if (isActive) {
             timerRef.current = setInterval(() => {
@@ -88,7 +89,7 @@ export function useTimer(initialInputTime = 60, initialAutoStart = true) {
                         clearInterval(timerRef.current);
                         setIsActive(false);
                         playAlarmSound();
-                        return 0;
+                        return inputTime;
                     }
                     return prevSeconds - 1;
                 });
@@ -123,12 +124,14 @@ export function useTimer(initialInputTime = 60, initialAutoStart = true) {
         isActive,
         inputTime,
         autoStart,
+        playSound,
         
         // Setters
         setSeconds,
         setIsActive,
         setInputTime,
         setAutoStart,
+        setPlaySound,
         
         // Refs (for audio element and interval cleanup)
         timerRef,

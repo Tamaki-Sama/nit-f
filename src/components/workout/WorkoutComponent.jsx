@@ -3,7 +3,7 @@ import { Button, Input } from 'antd';
 import { useEffect, useState } from "react";
 import Set from "./SetComponent";
 import '../../styles/Log.css'
-import {Delete, Add} from '../common/Icons'
+import {Delete, Add, CheckmarkDoneSharp, Confirm} from '../common/Icons'
 
 export default function WorkoutComponent ({workout, workoutID, effectLogData, OnSetChecked}) {
     // دو حالت جداگانه برای Reps و Weight
@@ -12,7 +12,6 @@ export default function WorkoutComponent ({workout, workoutID, effectLogData, On
     const initialWeight = workout.countsByWeight ? 5 : undefined; 
     const [NewSetWeight, setNewSetWeight] = useState(initialWeight);
 
-    // 💡 هرگاه workoutID عوض شد (ورک‌آوت جدید آمد)، حالت‌های ورودی را ریست کن
     useEffect(() => {
         setNewSetReps(5);
         setNewSetWeight(initialWeight);
@@ -44,21 +43,18 @@ export default function WorkoutComponent ({workout, workoutID, effectLogData, On
     function handleEditConfirmButton(e) {
         e.preventDefault()
         
-        // 💡 سختگیری: پیدا کردن بزرگترین ID ست برای تضمین منحصر به فرد بودن ID جدید
         const maxSetId = workout.sets.reduce((max, set) => set.id > max ? set.id : max, 0);
         const nextSetId = maxSetId + 1;
 
         const newSetObject = {
             id: nextSetId,
             reps: Number(NewSetReps),
-            // اگر تمرین countsByWeight باشد، وزن را ثبت کن، در غیر این صورت undefined
             weight: workout.countsByWeight ? Number(NewSetWeight) : undefined, 
             RepEdit: false,
             WeightEdit: false,
             done: false,
         }
         
-        // اگر وزن ضروری بود ولی وارد نشد (فقط برای اطمینان بیشتر، چون required در input هست)
         if (workout.countsByWeight && newSetObject.weight === undefined) {
              console.error("Weight is required for this exercise.");
              return;
@@ -71,6 +67,34 @@ export default function WorkoutComponent ({workout, workoutID, effectLogData, On
             log_sets: updatedSets
         })
     }
+    function handleCheckAll() {
+        if(workout.sets.find(s => !s.done)) {
+            const multiChangeSets = workout.sets.map( s=>
+                ({...s, done: true})
+            )
+            effectLogData({
+                type: "Confirm Edit",
+                log_id: workoutID,
+                log_sets: multiChangeSets
+            })
+        } else {
+            const multiChangeSets = workout.sets.map( s=>
+                ({...s, done: false})
+            )
+            effectLogData({
+                type: "Confirm Edit",
+                log_id: workoutID,
+                log_sets: multiChangeSets
+            })
+        }
+    }
+    function handleEditEnd(e) {
+        e.preventDefault()
+        effectLogData({
+            type: "End Edit",
+            log_id: workoutID
+        })
+    }
 
     return (
         <>
@@ -79,6 +103,12 @@ export default function WorkoutComponent ({workout, workoutID, effectLogData, On
                     <span className='workout-name'>{workout.name}</span>
                     <div className="buttons" style={{width: '30%'}}>
                         <Button 
+                            type='text'
+                            size='large'
+                            onClick={handleCheckAll}
+                            icon={<CheckmarkDoneSharp />}
+                        />
+                        <Button 
                             type="text" 
                             danger 
                             icon={Delete} 
@@ -86,12 +116,18 @@ export default function WorkoutComponent ({workout, workoutID, effectLogData, On
                             size="large"
                         />
 
-                        {!workout.editing &&<Button 
+                        {!workout.editing ?<Button 
                             type="text" 
                             icon={Add} 
                             onClick={handleEditButton} 
                             size="large"
-                        />}             
+                        />:<Button 
+                        type="text" 
+                        icon={Confirm} 
+                        onClick={handleEditEnd} 
+                        size="large"
+                    />
+                        }
                     </div>
 
                 </div>

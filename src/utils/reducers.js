@@ -41,7 +41,15 @@ export function AccessLogData(state, action) {
             // به‌روزرسانی ست‌ها و خاموش کردن حالت ویرایش بر اساس ID
             return state.map(log => {
                 if (log.id === action.log_id) {
-                    return { ...log, sets: action.log_sets, editing: false };
+                    return { ...log, sets: action.log_sets };
+                }
+                return log;
+            });
+        }
+        case "End Edit": {
+            return state.map(log => {
+                if (log.id === action.log_id) {
+                    return { ...log, editing: false };
                 }
                 return log;
             });
